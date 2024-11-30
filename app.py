@@ -2,6 +2,10 @@ import plotly.graph_objects as go
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
+import os
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 # Sample data for the pie chart and scatter plot
 billing_data_list = [
