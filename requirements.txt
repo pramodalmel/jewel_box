@@ -1,0 +1,17 @@
+Flask==2.2.2           # Web framework
+flask-wtf==1.1.1       # For handling forms
+gunicorn==20.1.0       # For deploying Flask apps (production)
+Jinja2==3.1.2          # Templating engine (part of Flask but version can be pinned)
+
+# Visualization libraries
+matplotlib==3.7.1      # Visualization
+plotly==5.15.0         # Interactive visualizations
+seaborn==0.12.2        # Statistical plots
+dash==2.12.0           # Advanced visualization framework
+
+# Data manipulation and computation
+pandas==1.5.3          # Data analysis
+numpy==1.24.2          # Numerical computations
+
+# Optional dependencies
+requests==2.31.0       # HTTP requests (if API integration is needed)

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewelry Site</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Header Section with Menu and Logo -->
+    <header class="header">
+        <button class="menu-btn" onclick="toggleDropdown()">MENU</button>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logo2.jpg') }}" alt="Logo" class="logo">
+            <div class="title">PRAVEEN<span><h1>JEWELLERS</h1></span></div>
+        </div>
+        <nav class="nav-links">
+            <a href="#">HOME</a>
+            <a href="#">ABOUT</a>
+            <a href="#">IMAGES</a>
+            <a href="#">CONTACT</a>
+        </nav>
+    </header>
+
+    <!-- Dropdown Menu -->
+    <div id="dropdownMenu" class="dropdown-content">
+        <a href="#">PRICE</a>
+        <a href="#">CATEGORY</a>
+        <a href="#">JEWELLERY</a>
+        <a href="#">CART</a>
+    </div>
+
+    <!-- Billing Section -->
+    <section class="billing-section">
+        <a href="/billing" class="billing-btn">Create Billing</a>
+        
+        <!-- Billing Summary Output (Table Format) -->
+        {% if billing_data %}
+        <div class="template-output">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo2.jpg') }}" alt="Logo" class="logo">
+                <div class="title">Praveen Jewellers</div>
+            </div>
+            <h3>Billing Summary</h3>
+            <table class="billing-table">
+                <tr>
+                    <th>Name</th>
+                    <td>{{ billing_data.name }}</td>
+                </tr>
+                <tr>
+                    <th>Contact</th>
+                    <td>{{ billing_data.contact }}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>{{ billing_data.address }}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ billing_data.date }}</td>
+                </tr>
+                <tr>
+                    <th>Item</th>
+                    <td>{{ billing_data.item }}</td>
+                </tr>
+                <tr>
+                    <th>Quantity</th>
+                    <td>{{ billing_data.quantity }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>{{ billing_data.price }}</td>
+                </tr>
+                <tr>
+                    <th>Discount</th>
+                    <td>{{ billing_data.discount }}</td>
+                </tr>
+                <tr>
+                    <th>Tax</th>
+                    <td>{{ billing_data.tax }}</td>
+                </tr>
+                <tr>
+                    <th>Total Price</th>
+                    <td>{{ billing_data.total_price }}</td>
+                </tr>
+            </table>
+            <div class="billing-actions">
+                <button onclick="window.print()" class="print-btn">Print</button>
+                <button onclick="window.location.href='/'" class="close-btn">Close</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Pie Chart Section -->
+        {% if pie_chart %}
+        <div class="pie-chart">
+            <h3>Sales Distribution by Item</h3>
+            <div>{{ pie_chart|safe }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Scatter Plot Section -->
+        {% if scatter_plot %}
+        <div class="scatter-plot">
+            <h3>Date vs Price Scatter Plot</h3>
+            <div>{{ scatter_plot|safe }}</div>
+        </div>
+        {% endif %}
+    </section>
+
+    <script>
+        function toggleDropdown() {
+            var dropdownMenu = document.getElementById("dropdownMenu");
+            if (dropdownMenu.style.display === "none" || dropdownMenu.style.display === "") {
+                dropdownMenu.style.display = "block";
+            } else {
+                dropdownMenu.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

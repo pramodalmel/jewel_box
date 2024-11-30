@@ -1,0 +1,336 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #624f618d;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styling */
+.header {
+    background-image: url(../images/header2.jpg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #ffffff67;
+    box-shadow: 0 4px 8px rgba(192, 219, 225, 0.6);
+}
+
+/* Menu Button Styling */
+.menu-btn {
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px 10px;
+    border-radius: 15px;
+}
+
+.menu-btn:hover {
+    background: linear-gradient(140deg, #a972b2, #817f93cb);
+}
+
+/* Logo and Title Styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: Playball;
+    background: linear-gradient(140deg, #d4bb2d, #333333);
+    -webkit-background-clip: text;
+    color: transparent;
+    word-spacing: 5px;
+}
+
+.title span {
+    display: block;
+    margin-left: 30px;
+}
+
+/* Header Links Styling */
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 18px;
+    padding-right: 10px;
+    color: #000000d4;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    color: #aa9abb;
+}
+
+/* Dropdown Menu Styling */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100px;
+    left: 8px;
+    background-color: #a9dcd841;
+    box-shadow: 0 4px 8px rgba(221, 212, 212, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 10;
+    width: 150px;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    border-bottom: 3px solid #edf0f6;
+    text-align: center;
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #6c3d94;
+}
+
+
+/* Billing Section */
+.billing-section {
+    padding: 50px;
+    font-size: 20px;
+    text-align: center;
+}
+/* Billing Form Section Customization */
+.billing-form-section {
+    margin: auto;
+    margin-top: 40px;
+    font-size: 20px;
+    padding: 20px;
+    background-color: hsla(0, 0%, 100%, 0.782); /* Background color for the form section */
+    border-radius: 8px; /* Rounded corners for the form */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for better visual separation */
+    width: 30%; /* Adjust the form width */
+}
+
+/* Label Customization */
+.billing-form-section label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333; /* Darker text for labels */
+    margin-bottom: 5px; /* Spacing between label and input field */
+    display: block;
+}
+
+/* Input Box Customization */
+.billing-form-section input[type="text"],
+.billing-form-section input[type="number"],
+.billing-form-section input[type="date"],
+.billing-form-section textarea {
+    width: 80%; 
+    padding: 10px; /* Padding inside the input box */
+    margin-bottom: 13px; /* Space below each input */
+    border: 2px solid #ccc; /* Light border color */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 16px; /* Input text size */
+    color: #333; /* Text color */
+    background-color: #f9f9f975; /* Light background color for inputs */
+}
+
+/* Input Focus Styling */
+.billing-form-section input[type="text"]:focus,
+.billing-form-section input[type="number"]:focus,
+.billing-form-section input[type="date"]:focus,
+.billing-form-section textarea:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #007bff; /* Blue border on focus */
+    background-color: #ffffff5d; /* Slightly white background on focus */
+}
+
+/* Textarea Customization */
+.billing-form-section textarea {
+    height: 150px; /* Custom height for the textarea */
+    resize: vertical; /* Allow vertical resize only */
+}
+
+/* Submit Button Customization */
+.billing-form-section button[type="submit"] {
+    background-color: #28a745; /* Green background for submit button */
+    color: #fff; /* White text */
+    padding: 15px 30px; /* Padding around the text */
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+/* Submit Button Hover Effect */
+.billing-form-section button[type="submit"]:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Close Button Styling */
+.billing-form-section button[type="button"] {
+    background-color: #dc3545; /* Red background for close button */
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Close Button Hover Effect */
+.billing-form-section button[type="button"]:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+
+/* Template Output (Billing Summary Table) */
+.template-output {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fdf5e6;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.billing-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.billing-table th, .billing-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.billing-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.billing-table td {
+    background-color: #ffffff;
+}
+
+.billing-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.print-btn,
+.close-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.print-btn {
+    background-color: #f4b9c7;
+}
+
+.print-btn:hover {
+    background-color: #e39cb0;
+}
+
+.close-btn {
+    background-color: #b93a7b;
+}
+
+.close-btn:hover {
+    background-color: #e39cb0;
+}
+
+/* Media Queries for Printing */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    /* Ensure visibility for the entire template output */
+    .template-output, .template-output * {
+        visibility: visible;
+    }
+
+    /* Ensure the title ("Praveen Jewellers") is fully visible */
+    .template-output .title {
+        display: block;
+        text-align: center;
+        margin-top: 20px; /* Position it above the table */
+        font-size: 24px;  /* Adjust for print readability */
+        font-weight: bold;
+        color: #000; /* Solid black for printing */
+        background: none; /* Remove gradient for print */
+        -webkit-background-clip: none; /* Ensure plain text */
+        word-spacing: 5px;
+    }
+
+    /* Ensure the logo is also visible */
+    .template-output .logo-container {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .template-output .logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+
+    /* Hide non-relevant elements */
+    .template-output button {
+        display: none; /* Do not show buttons in print */
+    }
+
+    /* Adjust the billing table to fit nicely on the page */
+    .billing-table {
+        width: 100%; /* Full width */
+        margin: auto; /* Center the table */
+        border-collapse: collapse;
+    }
+
+    .billing-table th, .billing-table td {
+        padding: 10px;
+        border: 1px solid #000;
+        text-align: left;
+    }
+
+    .billing-table th {
+        background-color: #f4f4f4;
+    }
+}
