@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Praveen Jewellers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Welcome to Praveen Jewellers</h1>
+    </header>
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-text">
+                <h2>About Us</h2>
+                <p>
+                    Founded in 1993, our jewelry shop began as a humble endeavor fueled by passion and dedication. 
+                    With a small amount of gold and the unwavering support of my brothers, we started crafting beautiful 
+                    pieces that symbolized love, tradition, and celebration. Over the years, our commitment to quality and 
+                    customer trust has helped us grow beyond expectations. Today, we proudly serve our customers from 
+                    multiple locations in Devara Hipparagi, offering a wide range of exquisite jewelry for every occasion. 
+                    At Praveen Jewellers, every piece tells a story of fine craftsmanship, timeless elegance, and unmatched precision. 
+                    We are honored to be a part of your special moments, creating treasures that last a lifetime.
+                </p>
+            </div>
+            <div class="about-images">
+                <img src="{{ url_for('static', filename='images/shop1.jpg') }}" alt="Our First Shop" class="about-img">
+                <img src="{{ url_for('static', filename='images/shop2.jpg') }}" alt="Our Current Location" class="about-img">
+                <img src="{{ url_for('static', filename='images/jewelry.jpg') }}" alt="Exclusive Jewelry" class="about-img">
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <p>© 2025 Praveen Jewellers. All rights reserved.</p>
+    </footer>
+</body>
+</html>
