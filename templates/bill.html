@@ -14,31 +14,58 @@
                 <img src="{{ url_for('static', filename='images/logo2.jpg') }}" alt="Logo" class="logo">
                 <div class="title">Praveen Jewellers</div>
             </div>
-            <table class="billing-table">
-                <tr><th>Name</th><td>{{ billing_data[0].name }}</td></tr>
-                <tr><th>Contact</th><td>{{ billing_data[0].contact }}</td></tr>
-                <tr><th>Address</th><td>{{ billing_data[0].address }}</td></tr>
-                <tr><th>Date</th><td>{{ billing_data[0].date }}</td></tr>
-            </table>
 
-            <table class="items-table">
-                <tr><th>Item</th><th>Quantity</th><th>Price</th><th>Discount</th><th>Tax</th><th>Total Price</th></tr>
-                {% for bill in billing_data %}
-                    <tr>
-                        <td>{{ bill.item }}</td>
-                        <td>{{ bill.quantity }}</td>
-                        <td>{{ bill.price }}</td>
-                        <td>{{ bill.discount }}</td>
-                        <td>{{ bill.tax }}</td>
-                        <td>{{ bill.total_price }}</td>
-                    </tr>
+            <!-- Personal and Address Information -->
+            <div class="personal-info">
+                <div><strong>Name:</strong> {{ billing_data[0].name }}</div>
+                <div><strong>Contact:</strong> {{ billing_data[0].contact }}</div>
+                <div><strong>Address:</strong> {{ billing_data[0].address }}</div>
+                <div><strong>Date:</strong> {{ billing_data[0].date }}</div>
+            </div>
+
+            <!-- Item Details -->
+            <table class="item-details-table">
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Discount (%)</th>
+                    <th>Tax (%)</th>
+                    <th>Total Price</th>
+                </tr>
+                {% for item in billing_data %}
+                <tr>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.discount }}</td>
+                    <td>{{ item.tax }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="5"><strong>Total Amount</strong></td>
+                    <td><strong>{{ total_amount }}</strong></td>
+                </tr>
             </table>
 
             <div class="billing-actions">
                 <button onclick="window.print()" class="print-btn">Print</button>
                 <button onclick="window.location.href='/'" class="close-btn">Close</button>
-                <button onclick="window.location.href='/'" class="update-btn">Update</button>
+                <button onclick="window.location.href='/billing'" class="update-btn">Update</button>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="pie-chart">
+                <h3>Sales Distribution by Item</h3>
+                <div>{{ pie_chart|safe }}</div>
+            </div>
+
+            <div class="scatter-plot">
+                <h3>Date vs Price Scatter Plot</h3>
+                <div>{{ scatter_plot|safe }}</div>
             </div>
         </div>
     </section>

@@ -12,6 +12,7 @@ db = SQLAlchemy(app)
 # Database model for billing data
 class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    bill_id = db.Column(db.String(50), nullable=False)  # Unique ID for the bill
     name = db.Column(db.String(100), nullable=False)
     contact = db.Column(db.String(15), nullable=False)
     address = db.Column(db.Text, nullable=False)
@@ -22,6 +23,7 @@ class Billing(db.Model):
     discount = db.Column(db.Float, nullable=False)
     tax = db.Column(db.Float, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+
 
 # Helper function to get the time range for filtering data
 def get_time_range(time_period):
@@ -98,32 +100,42 @@ def billing():
         discounts = list(map(float, request.form.getlist("discount")))
         taxes = list(map(float, request.form.getlist("tax")))
 
-        total_price = 0
+        bill_id = f"bill_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+
+        # Add each item with the same bill_id
         for i in range(len(items)):
             subtotal = quantities[i] * prices[i]
             discount_amount = subtotal * (discounts[i] / 100)
             tax_amount = subtotal * (taxes[i] / 100)
-            total_price += subtotal - discount_amount + tax_amount
+            total_price = subtotal - discount_amount + tax_amount
 
-        # Add each item as a new billing entry
-        for i in range(len(items)):
             new_billing = Billing(
+                bill_id=bill_id,
                 name=name, contact=contact, address=address, date=date,
                 item=items[i], quantity=quantities[i], price=prices[i],
-                discount=discounts[i], tax=taxes[i],
-                total_price=(quantities[i] * prices[i] - (quantities[i] * prices[i] * (discounts[i] / 100)) + (quantities[i] * prices[i] * (taxes[i] / 100)))
+                discount=discounts[i], tax=taxes[i], total_price=total_price
             )
             db.session.add(new_billing)
 
         db.session.commit()
 
-        return redirect(f"/bill/{new_billing.id}")
+        return redirect(f"/bill/{bill_id}")
     return render_template("billing_form.html")
 
-@app.route("/bill/<int:id>")
-def bill(id):
-    billing_data = Billing.query.get_or_404(id)
-    return render_template("bill.html", billing_data=billing_data)
+
+@app.route("/bill_summary/<transaction_id>")
+def bill_summary(transaction_id):
+    billing_entries = Billing.query.filter_by(transaction_id=transaction_id).all()
+    total_price = request.args.get("total", 0)
+    return render_template("bill_summary.html", billing_entries=billing_entries, total_price=total_price)
+
+
+@app.route("/bill/<string:bill_id>")
+def bill(bill_id):
+    billing_data = Billing.query.filter_by(bill_id=bill_id).all()
+    total_amount = sum(item.total_price for item in billing_data)  # Total for all items
+    return render_template("bill.html", billing_data=billing_data, total_amount=total_amount)
+
 
 if __name__ == "__main__":
     with app.app_context():
