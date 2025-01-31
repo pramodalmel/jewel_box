@@ -8,11 +8,11 @@
 </head>
 <body>
     <section class="billing-summary-section">
-        <h2>Billing Summary</h2>
+        <h2 style="text-align: center;">Billing Summary</h2>
         <div class="template-output">
-            <div class="logo-container">
+            <div class="logo-container" style="text-align: center;">
                 <img src="{{ url_for('static', filename='images/logo2.jpg') }}" alt="Logo" class="logo">
-                <div class="title">Praveen Jewellers</div>
+                <div class="title" style="text-align: center;">Praveen Jewellers</div>
             </div>
 
             <!-- Personal and Address Information -->
@@ -24,7 +24,7 @@
             </table>
 
             <!-- Item Details -->
-            <h3>Items</h3>
+             <h3 style="text-align: center;">Items</h3>
             {% for item in billing_data %}
             <table class="billing-table">
                 <tr><th>Item</th><td>{{ item.item }}</td></tr>

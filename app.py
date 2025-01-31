@@ -1,18 +1,20 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import plotly.graph_objects as go
 import os
 from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///billing.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.urandom(24)  # For session management
 db = SQLAlchemy(app)
 
-# Database model for billing data
+# Database models for Billing and User
 class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bill_id = db.Column(db.String(50), nullable=False)  # Unique ID for the bill
+    bill_id = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     contact = db.Column(db.String(15), nullable=False)
     address = db.Column(db.Text, nullable=False)
@@ -24,6 +26,10 @@ class Billing(db.Model):
     tax = db.Column(db.Float, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
 
 # Helper function to get the time range for filtering data
 def get_time_range(time_period):
@@ -38,14 +44,17 @@ def get_time_range(time_period):
     elif time_period == "yearly":
         start_date = today.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
     return start_date.strftime("%Y-%m-%d")
-#page to about.html
-@app.route('/About')
+
+@app.route("/about")
 def about():
     return render_template('about.html')
 
-
 @app.route("/", methods=["GET", "POST"])
 def home():
+    # Ensure user is logged in
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
     time_period = request.args.get("time_period", "daily")
     start_date = get_time_range(time_period)
     
@@ -101,8 +110,6 @@ def billing():
         taxes = list(map(float, request.form.getlist("tax")))
 
         bill_id = f"bill_{datetime.now().strftime('%Y%m%d%H%M%S')}"
-
-        # Add each item with the same bill_id
         for i in range(len(items)):
             subtotal = quantities[i] * prices[i]
             discount_amount = subtotal * (discounts[i] / 100)
@@ -122,20 +129,59 @@ def billing():
         return redirect(f"/bill/{bill_id}")
     return render_template("billing_form.html")
 
-
 @app.route("/bill_summary/<transaction_id>")
 def bill_summary(transaction_id):
     billing_entries = Billing.query.filter_by(transaction_id=transaction_id).all()
     total_price = request.args.get("total", 0)
     return render_template("bill_summary.html", billing_entries=billing_entries, total_price=total_price)
 
-
 @app.route("/bill/<string:bill_id>")
 def bill(bill_id):
     billing_data = Billing.query.filter_by(bill_id=bill_id).all()
-    total_amount = sum(item.total_price for item in billing_data)  # Total for all items
+    total_amount = sum(item.total_price for item in billing_data)
     return render_template("bill.html", billing_data=billing_data, total_amount=total_amount)
 
+# Login Route
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            session['username'] = username  # Store username in session
+            return redirect(url_for('home'))
+        else:
+            flash("Invalid credentials, please try again.", 'error')
+    return render_template("login.html")
+
+# Signup Route
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        hashed_password = generate_password_hash(password)
+        
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash("Username already exists!", 'error')
+            return redirect(url_for('signup'))
+        
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Account created successfully! Please login.", 'success')
+        return redirect(url_for('login'))
+    
+    return render_template("signup.html")
+
+# Logout Route
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 if __name__ == "__main__":
     with app.app_context():

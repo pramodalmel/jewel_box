@@ -6,331 +6,260 @@
 }
 
 body {
-    font-family: 'Times New Roman', Times, serif;
-    background-color: #624f618d;
-    margin: 0;
-    padding: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(120deg, #f8f9fa, #e9eff6); /* Subtle gradient for the background */
+    color: #333;
+    line-height: 1.5;
 }
 
 /* Header Styling */
 .header {
-    background-image: url(../images/header2.jpg);
+    background: linear-gradient(90deg, #6a9bd8, #517ea3); /* Gradient background */
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    background-color: #ffffff67;
-    box-shadow: 0 4px 8px rgba(192, 219, 225, 0.6);
+    height: 90px; /* Set a fixed height */
+    padding: 0 20px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #bdd1ea;
+    font-size: 1rem; 
 }
 
-/* Menu Button Styling */
-.menu-btn {
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 10px 10px;
-    border-radius: 15px;
-}
 
-.menu-btn:hover {
-    background: linear-gradient(140deg, #a972b2, #817f93cb);
-}
-
-/* Logo and Title Styling */
-.logo-container {
+.header .logo-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .logo {
-    width: 70px;
-    height: 70px;
-    border-radius: 50px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-    font-size: 24px;
+    font-size: 23px; /* Matches original font size */
     font-weight: bold;
-    font-family: Playball;
-    background: linear-gradient(140deg, #d4bb2d, #333333);
+    font-family: 'Georgia', serif;
+    align-content:center;
+    line-height:initial;
+    background: linear-gradient(120deg, #ffd700, #f39c12); /* Gold gradient text */
     -webkit-background-clip: text;
     color: transparent;
-    word-spacing: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height:90px;
 }
 
-.title span {
-    display: block;
-    margin-left: 30px;
-}
-
-/* Header Links Styling */
 .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .nav-links a {
     text-decoration: none;
-    font-size: 18px;
-    padding-right: 10px;
-    color: #000000d4;
+    font-size: 16px;
+    color: #ffffff;
     font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #aa9abb;
-}
-
-/* Dropdown Menu Styling */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100px;
-    left: 8px;
-    background-color: #a9dcd841;
-    box-shadow: 0 4px 8px rgba(221, 212, 212, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    z-index: 10;
-    width: 150px;
-}
-
-.dropdown-content a {
-    display: block;
-    padding: 10px;
-    color: #333;
-    text-decoration: none;
-    font-size: 15px;
-    border-bottom: 3px solid #edf0f6;
+    color: #ffd700; 
+    text-align: center;/* Gold hover color */
+    transform: translateY(-2px);
     text-align: center;
 }
-
-.dropdown-content a:last-child {
-    border-bottom: none;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-    color: #6c3d94;
-}
-
 
 /* Billing Section */
 .billing-section {
-    padding: 50px;
-    font-size: 20px;
+    padding: 40px;
     text-align: center;
-}
-/* Billing Form Section Customization */
-.billing-form-section {
-    margin: auto;
-    margin-top: 40px;
-    font-size: 20px;
-    padding: 20px;
-    background-color: hsla(0, 0%, 100%, 0.782); /* Background color for the form section */
-    border-radius: 8px; /* Rounded corners for the form */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for better visual separation */
-    width: 30%; /* Adjust the form width */
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb);
+    border-radius: 10px;
+    margin: 40px auto;
+    max-width: 80%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Label Customization */
+/* Billing Form Section */
+.billing-form-section {
+    margin: 20px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 50%; /* Retains original width */
+}
+
 .billing-form-section label {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333; /* Darker text for labels */
-    margin-bottom: 5px; /* Spacing between label and input field */
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
     display: block;
 }
 
-/* Input Box Customization */
-.billing-form-section input[type="text"],
-.billing-form-section input[type="number"],
-.billing-form-section input[type="date"],
+.billing-form-section input,
 .billing-form-section textarea {
-    width: 80%; 
-    padding: 10px; /* Padding inside the input box */
-    margin-bottom: 13px; /* Space below each input */
-    border: 2px solid #ccc; /* Light border color */
-    border-radius: 6px; /* Rounded corners */
-    font-size: 16px; /* Input text size */
-    color: #333; /* Text color */
-    background-color: #f9f9f975; /* Light background color for inputs */
-}
-
-/* Input Focus Styling */
-.billing-form-section input[type="text"]:focus,
-.billing-form-section input[type="number"]:focus,
-.billing-form-section input[type="date"]:focus,
-.billing-form-section textarea:focus {
-    outline: none; /* Remove default focus outline */
-    border-color: #007bff; /* Blue border on focus */
-    background-color: #ffffff5d; /* Slightly white background on focus */
-}
-
-/* Textarea Customization */
-.billing-form-section textarea {
-    height: 150px; /* Custom height for the textarea */
-    resize: vertical; /* Allow vertical resize only */
-}
-
-/* Submit Button Customization */
-.billing-form-section button[type="submit"] {
-    background-color: #28a745; /* Green background for submit button */
-    color: #fff; /* White text */
-    padding: 15px 30px; /* Padding around the text */
-    border: none;
-    border-radius: 8px; /* Rounded corners */
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth background transition */
-}
-
-/* Submit Button Hover Effect */
-.billing-form-section button[type="submit"]:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-
-/* Close Button Styling */
-.billing-form-section button[type="button"] {
-    background-color: #dc3545; /* Red background for close button */
-    color: #fff;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Close Button Hover Effect */
-.billing-form-section button[type="button"]:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
-
-
-/* Template Output (Billing Summary Table) */
-.template-output {
-    margin-top: 20px;
-    padding: 15px;
-    background: #fdf5e6;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.billing-table {
-    width: 90%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.billing-table th, .billing-table td {
-    border: 1px solid #ddd;
+    width: 100%;
     padding: 12px;
-    text-align: left;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.billing-form-section input:focus,
+.billing-form-section textarea:focus {
+    border-color: #3498db;
+    background: #ecf0f1;
+    outline: none;
+}
+
+/* Buttons */
+.billing-form-section button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.billing-form-section button[type="submit"] {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    color: white;
+}
+
+.billing-form-section button[type="submit"]:hover {
+    background: linear-gradient(90deg, #2980b9, #3498db);
+    transform: translateY(-3px);
+}
+
+.billing-form-section button[type="button"] {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.billing-form-section button[type="button"]:hover {
+    background: linear-gradient(90deg, #c0392b, #e74c3c);
+}
+
+/* Table Styling */
+.billing-table {
+    width: 80%; /* Adjust width as needed */
+    border-collapse: collapse;
+    margin: 20px auto; /* Center the table horizontally */
+    border: 1px solid #ddd; /* Table border */
 }
 
 .billing-table th {
-    background-color: #f4f4f4;
+    background: #eaf2f8;
+    color: #333;
     font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left; /* Ensures headers align to the left */
 }
 
 .billing-table td {
-    background-color: #ffffff;
+    background: #ffffff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left; /* Ensures cells align to the left */
+}
+
+.billing-table td:hover {
+    background: #f7f9fa;
+}
+.h3{
+text-align: center;
+}
+
+.billing-table .h3 {
+    text-align: center; /* Center-aligns the content in h3 rows */
+}
+
+.billing-table th .h3 {
+    background: #eaf2f8;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.billing-table td.h3 {
+    background: #ffffff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center; /* Ensure text is centered in .h3 cells */
+}
+
+.billing-table td:hover .h3 {
+    background: #f7f9fa;
 }
 
 .billing-actions {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
+    display: flex; 
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 20px; 
 }
 
-.print-btn,
-.close-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
+.billing-actions button {
+    padding: 10px 20px; /* Add padding for larger clickable area */
+    font-size: 16px; /* Set the font size */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
+/* Individual button styles */
 .print-btn {
-    background-color: #f4b9c7;
-}
-
-.print-btn:hover {
-    background-color: #e39cb0;
+    background-color: #4caf50; 
+    color: #fff; 
 }
 
 .close-btn {
-    background-color: #b93a7b;
+    background-color: #f44336; 
+    color: #fff; 
 }
 
-.close-btn:hover {
-    background-color: #e39cb0;
+.update-btn {
+    background-color: #2196f3; 
+    color: #fff; 
 }
 
-/* Media Queries for Printing */
+/* Hover effect for buttons */
+.billing-actions button:hover {
+    background-color: #333; 
+    color: #fff; 
+    transform: scale(1.05);
+}
+
+/* Optional: Active state */
+.billing-actions button:active {
+    transform: scale(0.95); 
+}
 @media print {
-    body * {
-        visibility: hidden;
+    .billing-actions {
+        display: none;
     }
-    /* Ensure visibility for the entire template output */
-    .template-output, .template-output * {
-        visibility: visible;
-    }
+}
 
-    /* Ensure the title ("Praveen Jewellers") is fully visible */
-    .template-output .title {
-        display: block;
-        text-align: center;
-        margin-top: 20px; /* Position it above the table */
-        font-size: 24px;  /* Adjust for print readability */
-        font-weight: bold;
-        color: #000; /* Solid black for printing */
-        background: none; /* Remove gradient for print */
-        -webkit-background-clip: none; /* Ensure plain text */
-        word-spacing: 5px;
-    }
-
-    /* Ensure the logo is also visible */
-    .template-output .logo-container {
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-    }
-
-    .template-output .logo {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
-
-    /* Hide non-relevant elements */
-    .template-output button {
-        display: none; /* Do not show buttons in print */
-    }
-
-    /* Adjust the billing table to fit nicely on the page */
-    .billing-table {
-        width: 100%; /* Full width */
-        margin: auto; /* Center the table */
-        border-collapse: collapse;
-    }
-
-    .billing-table th, .billing-table td {
-        padding: 10px;
-        border: 1px solid #000;
-        text-align: left;
-    }
-
-    .billing-table th {
-        background-color: #f4f4f4;
-    }
+/* Footer Section */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(90deg, #6a9bd8, #517ea3);
+    color: white;
+    margin-top: 40px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
 }

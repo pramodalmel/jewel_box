@@ -15,10 +15,21 @@
         </div>
         <nav class="nav-links">
             <a href="#">HOME</a>
-            <a href="{{ url_for('about') }}" target="_blank">ABOUT</a>
+            <a href="{{ url_for('about') }}">ABOUT</a>
             <a href="#">IMAGES</a>
             <a href="#">CONTACT</a>
-        </nav>
+            <a href="{{ url_for('logout') }}" onclick="confirmLogout()">LOGOUT</a>
+
+            <script>
+            function confirmLogout() {
+                if (confirm("Do you want to logout?")) {
+                    window.location.href = "/logout";
+                }
+            }
+            </script>
+            
+
+        </nav>        
     </header>
     <section class="billing-section">
         <a href="/billing" class="billing-btn">Create Billing</a>
