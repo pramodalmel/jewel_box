@@ -151,10 +151,13 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             session['username'] = username  # Store username in session
+            flash("Login successful!", "success")
             return redirect(url_for('home'))
         else:
-            flash("Invalid credentials, please try again.", 'error')
+            flash("Invalid username or password, please try again.", 'error')
+    
     return render_template("login.html")
+
 
 # Signup Route
 @app.route("/signup", methods=["GET", "POST"])

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Summary</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <section class="bill-summary-section">
+        <h2>Bill Summary</h2>
+        <div class="bill-summary-container">
+            {% for entry in billing_entries %}
+            <div class="bill-entry">
+                <h3>Bill #{{ entry.bill_id }}</h3>
+                <table class="billing-table">
+                    <tr><th>Customer Name</th><td>{{ entry.customer_name }}</td></tr>
+                    <tr><th>Contact</th><td>{{ entry.contact }}</td></tr>
+                    <tr><th>Address</th><td>{{ entry.address }}</td></tr>
+                    <tr><th>Bill Date</th><td>{{ entry.bill_date }}</td></tr>
+                </table>
+
+                <h4>Items</h4>
+                {% for item in entry.items %}
+                <table class="billing-table">
+                    <tr><th>Item Name</th><td>{{ item.item_name }}</td></tr>
+                    <tr><th>Quantity</th><td>{{ item.quantity }}</td></tr>
+                    <tr><th>Price</th><td>{{ item.price }}</td></tr>
+                    <tr><th>Discount (%)</th><td>{{ item.discount_percentage }}</td></tr>
+                    <tr><th>Tax (%)</th><td>{{ item.tax_percentage }}</td></tr>
+                    <tr><th>Total Price</th><td>{{ item.total_price }}</td></tr>
+                </table>
+                {% endfor %}
+
+                <table class="billing-table total">
+                    <tr><th>Total Amount</th><td><strong>{{ entry.total_amount }}</strong></td></tr>
+                </table>
+            </div>
+            {% endfor %}
+
+            <div class="billing-actions">
+                <button onclick="window.print()" class="print-btn">Print</button>
+                <button onclick="window.location.href='/'" class="close-btn">Close</button>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

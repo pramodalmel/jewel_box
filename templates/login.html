@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,13 @@
 <body>
     <section class="auth-section">
         <div class="auth-container">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
             <h2>Login</h2>
             <form action="/login" method="POST">
                 <div class="input-group">
@@ -27,4 +34,4 @@
         </div>
     </section>
 </body>
-</html> -->
+</html>
