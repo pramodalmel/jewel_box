@@ -3,65 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jewelry Site</title>
+    <title>Dashboard - Praveen Jewellers</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header class="header">
-        <!--<button class="menu-btn" onclick="toggleDropdown()">MENU</button>-->
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logo2.jpg') }}" alt="Logo" class="logo">
-            <div class="title">PRAVEEN<span><h1>JEWELLERS</h1></span></div>
+        <div class="nav-container">            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span class="brand-name">PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
         </div>
-        <nav class="nav-links">
-            <a href="#">HOME</a>
-            <a href="{{ url_for('about') }}">ABOUT</a>
-            <a href="#">IMAGES</a>
-            <a href="#">CONTACT</a>
-            <a href="{{ url_for('logout') }}" onclick="confirmLogout()">LOGOUT</a>
-
-            <script>
-            function confirmLogout() {
-                if (confirm("Do you want to logout?")) {
-                    window.location.href = "/logout";
-                }
-            }
-            </script>
-            
-
-        </nav>        
     </header>
-    <section class="billing-section">
-        <a href="/billing" class="billing-btn">Create Billing</a>
-    </section>
 
-    <section class="time-period-section">
-        <button onclick="window.location.href='/?time_period=daily'">Daily</button>
-        <button onclick="window.location.href='/?time_period=weekly'">Weekly</button>
-        <button onclick="window.location.href='/?time_period=monthly'">Monthly</button>
-        <button onclick="window.location.href='/?time_period=yearly'">Yearly</button>
-    </section>
+    <main class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-    <section class="charts-section">
-        <h3>Pie chart</h3>
-        <div id="pie-chart">{{ pie_chart|safe }}</div>
-        <h3>Scatter Plot</h3>
-        <div id="scatter-plot">{{ scatter_plot|safe }}</div>
-    </section>
+        <div class="dashboard-header">
+            <h1>Welcome, {{ username }}</h1>
+            <div class="dashboard-actions">
+                <a href="/billing" class="btn">
+                    <i class="fas fa-plus"></i> Create New Bill
+                </a>
+                <a href="/clear_history" class="btn btn-secondary" onclick="return confirmClearHistory()">
+                    <i class="fas fa-trash"></i> Clear History
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Today's Bills</h3>
+                <div class="value">{{ daily_bills if daily_bills else 0 }}</div>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-rupee-sign"></i>
+                <h3>Today's Revenue</h3>
+                <div class="value">₹{{ daily_revenue if daily_revenue else 0 }}</div>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Monthly Revenue</h3>
+                <div class="value">₹{{ monthly_revenue if monthly_revenue else 0 }}</div>
+            </div>
+        </div>
+
+        <div class="time-period-filter">
+            <h2>Sales Analytics</h2>
+            <div class="filter-buttons">
+                <a href="/?time_period=daily" class="btn {% if time_period == 'daily' %}active{% endif %}">
+                    <i class="fas fa-calendar-day"></i> Daily
+                </a>
+                <a href="/?time_period=weekly" class="btn {% if time_period == 'weekly' %}active{% endif %}">
+                    <i class="fas fa-calendar-week"></i> Weekly
+                </a>
+                <a href="/?time_period=monthly" class="btn {% if time_period == 'monthly' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> Monthly
+                </a>
+                <a href="/?time_period=yearly" class="btn {% if time_period == 'yearly' %}active{% endif %}">
+                    <i class="fas fa-calendar"></i> Yearly
+                </a>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-pie"></i> Sales Distribution</h3>
+                <div class="chart">{{ pie_chart|safe }}</div>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-scatter"></i> Sales Trend</h3>
+                <div class="chart">{{ scatter_plot|safe }}</div>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
-        <p>&copy; 2025 PRAVEEN JEWELLERS</p>
+        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
     </footer>
 
     <script>
-        function toggleDropdown() {
-            var dropdownMenu = document.getElementById("dropdownMenu");
-            if (dropdownMenu.style.display === "none" || dropdownMenu.style.display === "") {
-                dropdownMenu.style.display = "block";
-            } else {
-                dropdownMenu.style.display = "none";
-            }
-        }
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+
+    function confirmClearHistory() {
+        return confirm("Are you sure you want to clear the history?");
+    }
     </script>
 </body>
 </html>

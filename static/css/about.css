@@ -25,51 +25,182 @@ body {
     letter-spacing: 2px;
 }
 
-/* About Section */
+/* About page specific styles */
+.about-header {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    padding: 80px 0;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.about-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.about-header p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+.about-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .about-section {
-    padding: 40px;
-    background-color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+    align-items: center;
+}
+
+.about-section:nth-child(even) {
+    direction: rtl;
+}
+
+.about-section:nth-child(even) .text-content {
+    direction: ltr;
+}
+
+.about-image {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.05);
+}
+
+.text-content {
+    padding: 20px;
+}
+
+.text-content h2 {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.text-content p {
+    color: var(--light-text);
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 60px 0;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--white);
+    font-size: 24px;
+}
+
+.feature-card h3 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: var(--light-text);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Team section */
+.team-section {
+    padding: 60px 0;
+    background: var(--background);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.team-member {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+}
+
+.member-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-info {
+    padding: 20px;
     text-align: center;
 }
 
-.about-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
+.member-info h3 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    font-weight: 600;
 }
 
-.about-text {
-    flex: 1;
-    max-width: 500px;
-}
-
-.about-text h2 {
-    font-size: 32px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.about-text p {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #555;
-}
-
-/* About Images */
-.about-images {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.about-images img {
-    width: 100%;
-    max-width: 350px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.member-info p {
+    color: var(--light-text);
+    font-size: 0.9rem;
 }
 
 /* Footer */
@@ -85,23 +216,26 @@ body {
     font-size: 14px;
 }
 
-/* Media Queries for Responsiveness */
+/* Responsive styles */
 @media (max-width: 768px) {
-    .about-container {
-        flex-direction: column;
-        align-items: center;
+    .about-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 
-    .about-text,
-    .about-images {
-        max-width: 100%;
+    .about-section:nth-child(even) {
+        direction: ltr;
     }
 
-    .about-text h2 {
-        font-size: 28px;
+    .about-header {
+        padding: 60px 0;
     }
 
-    .about-text p {
-        font-size: 16px;
+    .about-header h1 {
+        font-size: 2rem;
+    }
+
+    .text-content h2 {
+        font-size: 1.5rem;
     }
 }
