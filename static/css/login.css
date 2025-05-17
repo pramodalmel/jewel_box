@@ -195,24 +195,30 @@ body::before {
 
 .btn {
     background: linear-gradient(45deg, #B8860B, #FFD700);
-    padding: 1rem;
+    padding: 1rem 2rem;
     border-radius: 10px;
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1px;
-    transform-style: preserve-3d;
+    color: white;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 2px 10px rgba(184, 134, 11, 0.2);
+    width: 100%;
 }
 
 .btn:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 8px 20px rgba(184, 134, 11, 0.2);
+    background: linear-gradient(45deg, #FFD700, #B8860B);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
 }
 
 .btn:active {
-    transform: translateY(0);
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.2);
 }
 
 /* Link styling */

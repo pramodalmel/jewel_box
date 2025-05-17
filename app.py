@@ -1,22 +1,54 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 import plotly.graph_objects as go
 import os
+import sys
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///billing.db'
+
+# Configure session to use filesystem
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+
+# Initialize Flask-Session
+Session(app)
+
+# Add template context processor for current year
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
+
+# App Configuration
+
+# Use environment variable for database URL, defaulting to SQLite
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///billing.db')
+if database_url.startswith("postgres://"):  # Handle Render's Postgres URL
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Fixed secret key for stable sessions
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Session lasts 1 day
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 db = SQLAlchemy(app)
 
 # Ensure database and tables exist
 def init_db():
-    with app.app_context():
-        db.create_all()
-        create_admin_user()
+    try:
+        with app.app_context():
+            db.create_all()
+            create_admin_user()
+            print("Database initialized successfully!")
+    except Exception as e:
+        print(f"Error initializing database: {e}")
+        raise
 
 # Database models
 class Billing(db.Model):
@@ -38,6 +70,7 @@ class Billing(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=True)  # Made email optional
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(20), nullable=False, default='user')
 
@@ -58,7 +91,12 @@ def get_time_range(time_period):
 def create_admin_user():
     if not User.query.filter_by(username='admin').first():
         hashed_password = generate_password_hash('admin123')
-        admin = User(username='admin', password=hashed_password, role='admin')
+        admin = User(
+            username='admin',
+            email='admin@jewelbox.com',
+            password=hashed_password,
+            role='admin'
+        )
         db.session.add(admin)
         db.session.commit()
 
@@ -105,6 +143,8 @@ def require_user():
 def require_no_admin():
     # Removed admin restrictions - admin can access all pages
     return None
+
+
 
 # Routes
 @app.route("/about")
@@ -309,6 +349,7 @@ def login():
                     flash("Please use admin login for admin access", "error")
                     return redirect(url_for('admin_login'))
                 
+                session.clear()  # Clear any existing session data
                 session['username'] = username
                 session['user_id'] = user.id
                 session['role'] = user.role
@@ -330,6 +371,7 @@ def signup():
 
     if request.method == "POST":
         username = request.form["username"]
+        email = request.form.get("email")  # Made email optional
         password = request.form["password"]
         confirm_password = request.form.get("confirm_password", "")
         
@@ -339,6 +381,11 @@ def signup():
             return render_template("signup.html")
         if not username.isalnum():
             flash("Username can only contain letters and numbers!", "error")
+            return render_template("signup.html")
+            
+        # Email validation
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered!", "error")
             return render_template("signup.html")
             
         # Password validation
@@ -364,7 +411,7 @@ def signup():
             flash("Username already exists!", "error")
         else:
             hashed_password = generate_password_hash(password)
-            new_user = User(username=username, password=hashed_password, role='user')
+            new_user = User(username=username, email=email, password=hashed_password, role='user')
             db.session.add(new_user)
             db.session.commit()
             flash("Account created! Please login.", "success")
@@ -433,6 +480,34 @@ def admin_login():
         print(f"Admin login error: {str(e)}")  # Log the error for debugging
         flash("An error occurred during login. Please try again.", "error")
         return render_template("admin_login.html")
+
+@app.route("/delete_account", methods=["GET", "POST"])
+def delete_account():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+        
+    if request.method == "POST":
+        password = request.form.get("password")
+        user = User.query.filter_by(username=session['username']).first()
+        
+        if user and check_password_hash(user.password, password):
+            try:
+                # Delete all user's billing records first
+                Billing.query.filter_by(user_id=user.id).delete()
+                # Delete the user
+                db.session.delete(user)
+                db.session.commit()
+                session.clear()  # Clear the session
+                flash("Your account has been successfully deleted.", "success")
+                return redirect(url_for('login'))
+            except Exception as e:
+                db.session.rollback()
+                flash("An error occurred while deleting your account.", "error")
+                print(f"Account deletion error: {str(e)}")
+        else:
+            flash("Invalid password.", "error")
+    
+    return render_template("delete_account.html")
 
 if __name__ == "__main__":
     # Ensure instance folder exists

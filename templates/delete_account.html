@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <h2>Delete Account</h2>
+        <div class="warning-box">
+            <p><strong>Warning:</strong> This action cannot be undone.</p>
+            <p>Deleting your account will:</p>
+            <ul>
+                <li>Remove all your personal information</li>
+                <li>Delete all your billing history</li>
+                <li>Permanently close your account</li>
+            </ul>
+        </div>
+        <form method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+            <div class="form-group">
+                <label for="password">Enter Your Password to Confirm</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
+        <div class="links">
+            <a href="{{ url_for('home') }}">Cancel</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
