@@ -427,10 +427,15 @@ def signup():
             flash("Username can only contain letters and numbers!", "error")
             return render_template("signup.html")
             
-        # Email validation
-        if User.query.filter_by(email=email).first():
-            flash("Email already registered!", "error")
-            return render_template("signup.html")
+        # Email validation and handling
+        if email:  # Only check if email is provided (since it's optional)
+            base_email = email
+            counter = 1
+            while User.query.filter_by(email=email).first():
+                # If email exists, add a number suffix before the @ symbol
+                email_name, domain = base_email.split('@')
+                email = f"{email_name}{counter}@{domain}"
+                counter += 1
             
         # Password validation
         if len(password) < 8:
