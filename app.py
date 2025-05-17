@@ -18,6 +18,13 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 
+# Production configuration
+if os.environ.get('FLASK_ENV') == 'production':
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PREFERRED_URL_SCHEME'] = 'https'
+
 # Initialize Flask-Session
 Session(app)
 
@@ -28,15 +35,31 @@ def inject_now():
 
 # App Configuration
 
-# Use environment variable for database URL, defaulting to SQLite
-database_url = os.environ.get('DATABASE_URL', 'sqlite:///billing.db')
-if database_url.startswith("postgres://"):  # Handle Render's Postgres URL
-    database_url = database_url.replace("postgres://", "postgresql://", 1)
+# Database configuration
+if os.environ.get('FLASK_ENV') == 'production':
+    # Use PostgreSQL in production (Render)
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+else:
+    # Use SQLite in development
+    database_url = 'sqlite:///billing.db'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', database_url)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+if not app.config['SECRET_KEY']:
+    app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+
+# Configure session handling for production
+if os.environ.get('FLASK_ENV') == 'production':
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 db = SQLAlchemy(app)
 
 # Ensure database and tables exist
@@ -135,13 +158,25 @@ def require_admin():
 
 # Route protection helpers
 def require_user():
-    if 'username' not in session:
+    if not session.get('logged_in') or 'username' not in session:
+        session.clear()
         flash("Please login first!", "error")
+        return redirect(url_for('login'))
+    
+    # Verify user still exists in database
+    user = User.query.filter_by(username=session['username']).first()
+    if not user:
+        session.clear()
+        flash("User account not found. Please login again.", "error")
         return redirect(url_for('login'))
     return None
 
 def require_no_admin():
-    # Removed admin restrictions - admin can access all pages
+    # Verify user is logged in and not an admin
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    if session.get('role') == 'admin':
+        return redirect(url_for('billing'))
     return None
 
 
@@ -333,27 +368,36 @@ def bill(bill_id):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if 'username' in session:
-        if session.get('role') == 'admin':
-            return redirect(url_for('billing'))
-        return redirect(url_for('home'))
-
+    # Clear any existing session first
+    session.clear()
+    
     if request.method == "POST":
         try:
-            username = request.form["username"]
-            password = request.form["password"]
+            username = request.form.get("username")
+            password = request.form.get("password")
+            
+            if not username or not password:
+                flash("Please provide both username and password", "error")
+                return render_template("login.html")
             
             user = User.query.filter_by(username=username).first()
+            
             if user and check_password_hash(user.password, password):
                 if user.role == 'admin':
                     flash("Please use admin login for admin access", "error")
                     return redirect(url_for('admin_login'))
                 
-                session.clear()  # Clear any existing session data
+                # Set session data
+                session.clear()
                 session['username'] = username
                 session['user_id'] = user.id
                 session['role'] = user.role
+                session['logged_in'] = True
                 session.permanent = True
+                
+                # Force session to be saved
+                session.modified = True
+                
                 flash("Login successful!", "success")
                 return redirect(url_for('home'))
             else:
