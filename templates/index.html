@@ -3,18 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Praveen Jewellers</title>
+    <title>Admin Dashboard - Praveen Jewellers</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .charts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chart-card > div {
+            width: 100% !important;  /* Force plotly charts to use full width */
+        }
+    </style>
 </head>
 <body>
     <header class="header">
-        <div class="nav-container">            <div class="logo">
+        <div class="nav-container">
+            <div class="logo">
                 <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
-                <span class="brand-name">PRAVEEN JEWELLERS</span>
+                <span>PRAVEEN JEWELLERS</span>
             </div>
             <nav class="nav-links">
-                <a href="/" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('billing') }}"><i class="fas fa-file-invoice"></i> Billing</a>
                 <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
                 <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
                 <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
@@ -48,54 +76,36 @@
         <div class="dashboard-cards">
             <div class="dashboard-card">
                 <i class="fas fa-file-invoice"></i>
-                <h3>Today's Bills</h3>
-                <div class="value">{{ daily_bills if daily_bills else 0 }}</div>
+                <div class="card-content">
+                    <h3>Daily Bills</h3>
+                    <p>{{ daily_bills }}</p>
+                </div>
             </div>
             <div class="dashboard-card">
                 <i class="fas fa-rupee-sign"></i>
-                <h3>Today's Revenue</h3>
-                <div class="value">₹{{ daily_revenue if daily_revenue else 0 }}</div>
+                <div class="card-content">
+                    <h3>Daily Revenue</h3>
+                    <p>₹{{ daily_revenue }}</p>
+                </div>
             </div>
             <div class="dashboard-card">
                 <i class="fas fa-chart-line"></i>
-                <h3>Monthly Revenue</h3>
-                <div class="value">₹{{ monthly_revenue if monthly_revenue else 0 }}</div>
+                <div class="card-content">
+                    <h3>Monthly Revenue</h3>
+                    <p>₹{{ monthly_revenue }}</p>
+                </div>
             </div>
         </div>
 
-        <div class="time-period-filter">
-            <h2>Sales Analytics</h2>
-            <div class="filter-buttons">
-                <a href="/?time_period=daily" class="btn {% if time_period == 'daily' %}active{% endif %}">
-                    <i class="fas fa-calendar-day"></i> Daily
-                </a>
-                <a href="/?time_period=weekly" class="btn {% if time_period == 'weekly' %}active{% endif %}">
-                    <i class="fas fa-calendar-week"></i> Weekly
-                </a>
-                <a href="/?time_period=monthly" class="btn {% if time_period == 'monthly' %}active{% endif %}">
-                    <i class="fas fa-calendar-alt"></i> Monthly
-                </a>
-                <a href="/?time_period=yearly" class="btn {% if time_period == 'yearly' %}active{% endif %}">
-                    <i class="fas fa-calendar"></i> Yearly
-                </a>
+        <div class="charts-container">
+            <div class="chart-card">
+                {{ pie_chart | safe }}
             </div>
-        </div>
-
-        <div class="charts-grid">
-            <div class="chart-container">
-                <h3><i class="fas fa-chart-pie"></i> Sales Distribution</h3>
-                <div class="chart">{{ pie_chart|safe }}</div>
-            </div>
-            <div class="chart-container">
-                <h3><i class="fas fa-chart-scatter"></i> Sales Trend</h3>
-                <div class="chart">{{ scatter_plot|safe }}</div>
+            <div class="chart-card">
+                {{ scatter_plot | safe }}
             </div>
         </div>
     </main>
-
-    <footer class="footer">
-        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
-    </footer>
 
     <script>
     function confirmLogout() {
@@ -103,7 +113,7 @@
     }
 
     function confirmClearHistory() {
-        return confirm("Are you sure you want to clear the history?");
+        return confirm("Are you sure you want to clear all billing history? This action cannot be undone.");
     }
     </script>
 </body>
