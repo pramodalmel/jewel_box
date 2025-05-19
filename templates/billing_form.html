@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Bill - Praveen Jewellers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span>PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-file-invoice"></i> Create New Bill</h2>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/billing" method="POST" class="billing-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Customer Name</label>
+                        <input type="text" id="name" name="name" class="form-control" required placeholder="Enter customer name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact"><i class="fas fa-phone"></i> Contact Number</label>
+                        <input type="text" id="contact" name="contact" class="form-control" required placeholder="Enter contact number">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <textarea id="address" name="address" class="form-control" required placeholder="Enter customer address"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date"><i class="fas fa-calendar"></i> Date</label>
+                        <input type="date" id="date" name="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <h3><i class="fas fa-list"></i> Items</h3>
+                    <div id="items">
+                        <div class="item-row">
+                            <div class="form-group">
+                                <label for="item">Item Name</label>
+                                <select name="item" class="form-control" required>
+                                    <option value="">Select an item</option>
+                                    <option value="Ring">Ring</option>
+                                    <option value="Necklace">Necklace</option>
+                                    <option value="Bracelet">Bracelet</option>
+                                    <option value="Earring">Earring</option>
+                                    <option value="Chain">Chain</option>
+                                    <option value="Pendant">Pendant</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" name="quantity" class="form-control" required min="1" placeholder="Qty">
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price (₹)</label>
+                                <input type="number" name="price" class="form-control" required min="0" step="0.01" placeholder="Price">
+                            </div>
+                            <div class="form-group">
+                                <label for="discount">Discount (%)</label>
+                                <input type="number" name="discount" class="form-control" required min="0" max="100" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="tax">Tax (%)</label>
+                                <input type="number" name="tax" class="form-control" required min="0" max="100" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-item-btn" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> Add Another Item
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-file-invoice"></i> Generate Bill
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
+    </footer>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const itemsContainer = document.getElementById("items");
+        const addItemBtn = document.getElementById("add-item-btn");
+
+        addItemBtn.addEventListener("click", () => {
+            const newRow = document.createElement("div");
+            newRow.classList.add("item-row");
+            newRow.innerHTML = `
+                <div class="form-group">
+                    <label for="item">Item Name</label>
+                    <select name="item" class="form-control" required>
+                        <option value="">Select an item</option>
+                        <option value="Ring">Ring</option>
+                        <option value="Necklace">Necklace</option>
+                        <option value="Bracelet">Bracelet</option>
+                        <option value="Earring">Earring</option>
+                        <option value="Chain">Chain</option>
+                        <option value="Pendant">Pendant</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" name="quantity" class="form-control" required min="1" placeholder="Qty">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price (₹)</label>
+                    <input type="number" name="price" class="form-control" required min="0" step="0.01" placeholder="Price">
+                </div>
+                <div class="form-group">
+                    <label for="discount">Discount (%)</label>
+                    <input type="number" name="discount" class="form-control" required min="0" max="100" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="tax">Tax (%)</label>
+                    <input type="number" name="tax" class="form-control" required min="0" max="100" placeholder="0">
+                </div>
+                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            itemsContainer.appendChild(newRow);
+        });
+    });
+
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+    </script>
+</body>
+</html>

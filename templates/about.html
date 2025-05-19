@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Praveen Jewellers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span>PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('about') }}" class="active"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="about-header">
+            <h1>Our Story</h1>
+            <p>A legacy of trust, craftsmanship, and elegance since 1993</p>
+        </div>
+
+        <div class="about-content">            <div class="about-section">
+                <div class="text-content">
+                    <h2>Our Heritage</h2>
+                    <p>Founded in 1993, Praveen Jewellers began as a humble endeavor fueled by passion and dedication. With a small amount of gold and the unwavering support of our family, we started crafting beautiful pieces that symbolized love, tradition, and celebration.</p>
+                    <p>Over the years, our commitment to quality and customer trust has helped us grow beyond expectations. Today, we proudly serve our customers from multiple locations in Devara Hipparagi.</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Premium Quality</h3>
+                    <p>Every piece of jewelry is crafted with the finest materials and attention to detail, ensuring lasting beauty and value.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Certified Authenticity</h3>
+                    <p>All our jewelry comes with proper certification and hallmarking, guaranteeing authenticity and purity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Customer Trust</h3>
+                    <p>Building lasting relationships through transparency, integrity, and exceptional service.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Expert Craftsmanship</h3>
+                    <p>Our master artisans combine traditional techniques with modern innovation to create timeless pieces.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>Rich Heritage</h3>
+                    <p>Three decades of excellence in jewelry crafting and customer service.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Family Values</h3>
+                    <p>A family-owned business that treats every customer as part of our extended family.</p>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <div class="text-content">
+                    <h2>Our Mission</h2>
+                    <p>At Praveen Jewellers, our mission is to create exquisite jewelry that celebrates life's most precious moments. Every piece tells a story of fine craftsmanship, timeless elegance, and unmatched precision.</p>
+                    <p>We are dedicated to:</p>
+                    <ul>
+                        <li>Maintaining the highest standards of quality and craftsmanship</li>
+                        <li>Providing transparent and ethical business practices</li>
+                        <li>Offering personalized service to each customer</li>
+                        <li>Preserving traditional jewelry-making techniques</li>
+                        <li>Creating lasting relationships with our community</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h2>Leadership</h2>
+                <div class="leadership-content">
+                    <div class="leader-info">
+                        <h3>Mr. Brahmananda Almel</h3>
+                        <p class="title">Founder & Master Craftsman</p>
+                        <p class="description">With over 30 years of experience in jewelry crafting, Mr. Brahmananda Almel leads our team with expertise and dedication to excellence. His vision and craftsmanship have made Praveen Jewellers a trusted name in the industry.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
+    </footer>
+
+    <script>
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+    </script>
+</body>
+</html>

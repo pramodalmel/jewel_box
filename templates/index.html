@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Praveen Jewellers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .charts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chart-card > div {
+            width: 100% !important;  /* Force plotly charts to use full width */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span>PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('billing') }}"><i class="fas fa-file-invoice"></i> Billing</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-header">
+            <h1>Welcome, {{ username }}</h1>
+            <div class="dashboard-actions">
+                <a href="/billing" class="btn">
+                    <i class="fas fa-plus"></i> Create New Bill
+                </a>
+                <a href="/clear_history" class="btn btn-secondary" onclick="return confirmClearHistory()">
+                    <i class="fas fa-trash"></i> Clear History
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <i class="fas fa-file-invoice"></i>
+                <div class="card-content">
+                    <h3>Daily Bills</h3>
+                    <p>{{ daily_bills }}</p>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-rupee-sign"></i>
+                <div class="card-content">
+                    <h3>Daily Revenue</h3>
+                    <p>₹{{ daily_revenue }}</p>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-chart-line"></i>
+                <div class="card-content">
+                    <h3>Monthly Revenue</h3>
+                    <p>₹{{ monthly_revenue }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                {{ pie_chart | safe }}
+            </div>
+            <div class="chart-card">
+                {{ scatter_plot | safe }}
+            </div>
+        </div>
+    </main>
+
+    <script>
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+
+    function confirmClearHistory() {
+        return confirm("Are you sure you want to clear all billing history? This action cannot be undone.");
+    }
+    </script>
+</body>
+</html>

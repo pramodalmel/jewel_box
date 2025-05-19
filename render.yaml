@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: jewel-box
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+      - key: SQLALCHEMY_DATABASE_URI
+        fromDatabase:
+          name: jewel-box-db
+          property: connectionString
+      # Email Configuration
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USE_TLS
+        value: 'True'
+      - key: MAIL_USERNAME
+        value: pramodalmel@gmail.com
+      - key: MAIL_PASSWORD
+        sync: false # This requires manual input during deployment
+      - key: MAIL_DEFAULT_SENDER
+        value: pramodalmel@gmail.com
+
+databases:
+  - name: jewel-box-db
+    databaseName: jewelbox
+    user: jewelbox_user

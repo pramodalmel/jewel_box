@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Praveen Jewellers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span>PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}" class="active"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card">
+            <div class="contact-header">
+                <h1>Contact Us</h1>
+                <p class="tagline">Where timeless craftsmanship meets modern elegance</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h2>The Proprietor</h2>
+                    <div class="contact-info">
+                        <p><strong>Mr. Brahmananda Almel</strong></p>
+                        <p><i class="fas fa-phone"></i> <a href="tel:+91 8088850229">+91 8088850229</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:pramodalmel@gmail.com">contact@pramodalmel@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="card-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h2>Visit Our Store</h2>
+                    <div class="contact-info">
+                        <p> Praveen jewellers , Near Bus stand</p>
+                        <p>Devara Hipparagi, Karnataka 586115-Dist:Vijayapura Tq:Devara Hipparagi</p>
+                        <p>India</p>
+                    </div>
+                </div>                <div class="contact-card map-card">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3819.2060638499715!2d76.06247747934572!3d16.81613040488965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc64ab69a44e71f%3A0xeee36235e190eba4!2sGanesh%20Bande%20Stores!5e0!3m2!1sen!2sin!4v1746807286452!5m2!1sen!2sin"
+                        width="100%" 
+                        height="300" 
+                        style="border:0; border-radius: 8px;" 
+                        allowfullscreen="" 
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>            <div class="social-section">
+                <h2>Connect With Us</h2>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/share/1AJUxbJyFy/" target="_blank" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="https://www.instagram.com/pramod_pattar_07?igsh=eGhmZjlvZm9lajlj" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://wa.me/918088850229" target="_blank" class="social-icon">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="business-hours">
+                <h2>Business Hours</h2>
+                <div class="hours-grid">
+                    <div class="day-time">
+                        <span>Monday - Saturday</span>
+                        <span>10:00 AM - 8:00 PM</span>
+                    </div>
+                    <div class="day-time">
+                        <span>Sunday</span>
+                        <span>11:00 AM - 6:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
+    </footer>
+
+    <script>
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+    </script>
+</body>
+</html>

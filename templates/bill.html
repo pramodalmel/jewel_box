@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill #{{ billing_data[0].bill_id }} - Praveen Jewellers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    <style>
+        @media print {
+            .header, .footer, .billing-actions, .no-print {
+                display: none !important;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+            .main-container {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                max-width: none;
+            }
+            .card {
+                box-shadow: none;
+                padding: 20px;
+                margin: 0;
+                width: 100%;
+                max-width: none;
+                border-radius: 0;
+            }
+            .invoice-header, .customer-info, .items-table, .invoice-footer {
+                width: 100%;
+                page-break-inside: avoid;
+            }
+            .table {
+                width: 100%;
+                page-break-inside: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            thead {
+                display: table-header-group;
+            }
+            tfoot {
+                display: table-footer-group;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header no-print">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo">
+                <span>PRAVEEN JEWELLERS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="{{ url_for('logout') }}" onclick="return confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card">
+            <!-- View Mode -->
+            <div id="viewMode">
+                <div class="invoice-header">
+                    <div class="company-info">
+                        <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="Logo" class="invoice-logo">
+                        <div>
+                            <h1>PRAVEEN JEWELLERS</h1>
+                            <p>Luxury Jewelry & Precious Gems</p>
+                            <p>123 Jewelry Street, Chennai, Tamil Nadu</p>
+                            <p>Phone: +91 1234567890</p>
+                        </div>
+                    </div>
+                    <div class="invoice-details">
+                        <h2>INVOICE</h2>
+                        <table>
+                            <tr>
+                                <td><strong>Bill No:</strong></td>
+                                <td>{{ billing_data[0].bill_id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date:</strong></td>
+                                <td>{{ billing_data[0].date }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="customer-info">
+                    <h3>Bill To:</h3>
+                    <div class="customer-details">
+                        <p><strong>{{ billing_data[0].name }}</strong></p>
+                        <p>{{ billing_data[0].contact }}</p>
+                        <p>{{ billing_data[0].address }}</p>
+                    </div>
+                </div>
+
+                <div class="items-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Tax</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in billing_data %}
+                            <tr>
+                                <td>{{ item.item }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ "%.2f"|format(item.price) }}</td>
+                                <td>{{ item.discount }}%</td>
+                                <td>{{ item.tax }}%</td>
+                                <td>₹{{ "%.2f"|format(item.total_price) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
+                                <td><strong>₹{{ "%.2f"|format(total_amount) }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="invoice-footer">
+                    <div class="terms-conditions">
+                        <h4>Terms & Conditions:</h4>
+                        <ul>
+                            <li>Payment is due upon receipt of the invoice.</li>
+                            <li>Returns must be made within 7 days of purchase.</li>
+                            <li>All items come with authentication certificates.</li>
+                        </ul>
+                    </div>
+                    <div class="signature-section">
+                        <div class="signature">
+                            <div class="line"></div>
+                            <p>Authorized Signature</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Form (Hidden by default) -->
+            <div id="updateForm" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-edit"></i> Update Bill</h2>
+                </div>
+
+                <form action="/bill/{{ billing_data[0].bill_id }}" method="POST" class="billing-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Customer Name</label>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ billing_data[0].name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact"><i class="fas fa-phone"></i> Contact Number</label>
+                            <input type="text" id="contact" name="contact" class="form-control" value="{{ billing_data[0].contact }}" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <textarea id="address" name="address" class="form-control" required>{{ billing_data[0].address }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date"><i class="fas fa-calendar"></i> Date</label>
+                            <input type="date" id="date" name="date" class="form-control" value="{{ billing_data[0].date }}" required>
+                        </div>
+                    </div>
+
+                    <div class="items-section">
+                        <h3><i class="fas fa-list"></i> Items</h3>
+                        {% for item in billing_data %}
+                        <div class="item-row">
+                            <div class="form-group">
+                                <label>Item Name</label>
+                                <select name="item" class="form-control" required>
+                                    <option value="">Select an item</option>
+                                    <option value="Ring" {% if item.item == 'Ring' %}selected{% endif %}>Ring</option>
+                                    <option value="Necklace" {% if item.item == 'Necklace' %}selected{% endif %}>Necklace</option>
+                                    <option value="Bracelet" {% if item.item == 'Bracelet' %}selected{% endif %}>Bracelet</option>
+                                    <option value="Earring" {% if item.item == 'Earring' %}selected{% endif %}>Earring</option>
+                                    <option value="Chain" {% if item.item == 'Chain' %}selected{% endif %}>Chain</option>
+                                    <option value="Pendant" {% if item.item == 'Pendant' %}selected{% endif %}>Pendant</option>
+                                    <option value="Other" {% if item.item not in ['Ring', 'Necklace', 'Bracelet', 'Earring', 'Chain', 'Pendant'] %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" name="quantity" class="form-control" value="{{ item.quantity }}" required min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Price (₹)</label>
+                                <input type="number" name="price" class="form-control" value="{{ item.price }}" required min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Discount (%)</label>
+                                <input type="number" name="discount" class="form-control" value="{{ item.discount }}" required min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Tax (%)</label>
+                                <input type="number" name="tax" class="form-control" value="{{ item.tax }}" required min="0" max="100">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <button type="button" onclick="toggleEditMode()" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="billing-actions no-print">
+                <button onclick="toggleEditMode()" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button onclick="window.print()" class="btn">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Close
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer no-print">
+        <p>&copy; 2025 PRAVEEN JEWELLERS. All rights reserved.</p>
+    </footer>
+
+    <script>
+    function toggleEditMode() {
+        const viewMode = document.getElementById('viewMode');
+        const updateForm = document.getElementById('updateForm');
+        
+        if (viewMode.style.display === 'none') {
+            viewMode.style.display = 'block';
+            updateForm.style.display = 'none';
+        } else {
+            viewMode.style.display = 'none';
+            updateForm.style.display = 'block';
+        }
+    }
+
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+    </script>
+</body>
+</html>

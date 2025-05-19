@@ -1,0 +1,27 @@
+# Web Framework and Core Components
+Flask==2.2.2
+Werkzeug==2.2.2
+Jinja2==3.1.2
+gunicorn==20.1.0       # For production deployment on Render
+itsdangerous==2.0.1   # For secure sessions
+
+# Flask Extensions
+flask-wtf==1.1.1      # For handling forms
+Flask-Session==0.5.0   # Server-side session support
+Flask-SQLAlchemy==3.0.2  # SQL database integration
+Flask-Mail==0.9.1      # Email support
+
+# Data Visualization
+plotly==5.15.0         # Interactive visualizations
+matplotlib==3.7.1      # For static visualizations
+seaborn==0.12.2        # Statistical plots
+dash==2.12.0           # Dashboard framework
+
+# Data Processing
+pandas==1.5.3
+numpy==1.24.2
+
+# Utilities and Security
+python-dotenv==1.0.0   # Environment variable management
+user-agents==2.2.0     # User agent parsing for device tracking
+requests==2.31.0       # HTTP requests (if needed for API integration)
