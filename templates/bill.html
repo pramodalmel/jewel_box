@@ -80,6 +80,11 @@
                             <p>Luxury Jewelry & Precious Gems</p>
                             <p>123 Jewelry Street, Chennai, Tamil Nadu</p>
                             <p>Phone: +91 1234567890</p>
+                            {% if billing_data[0].status == 'draft' %}
+                            <div class="alert alert-warning" style="margin-top: 10px;">
+                                <i class="fas fa-exclamation-triangle"></i> This is a DRAFT bill and will not appear in reports.
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="invoice-details">
@@ -235,6 +240,13 @@
             </div>
 
             <div class="billing-actions no-print">
+                {% if billing_data[0].status == 'draft' %}
+                <form action="{{ url_for('update_bill_status', bill_id=billing_data[0].bill_id) }}" method="POST" style="display: inline-block;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check-circle"></i> Update to Final
+                    </button>
+                </form>
+                {% endif %}
                 <button onclick="toggleEditMode()" class="btn btn-secondary">
                     <i class="fas fa-edit"></i> Edit
                 </button>
