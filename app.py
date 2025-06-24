@@ -22,10 +22,21 @@ app = Flask(__name__)
 # Set a secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 
-# Configure session to use filesystem
+# Configure session for indefinite persistence
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = True
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=3650)  # ~10 years (effectively forever)
+app.config['SESSION_FILE_THRESHOLD'] = 1000  # Increased threshold for session files
+app.config['SESSION_USE_SIGNER'] = True  # Encrypt the session cookie
+app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'  # Only send cookie over HTTPS in production
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent client-side JS from accessing the cookie
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # CSRF protection
+app.config['SESSION_REFRESH_EACH_REQUEST'] = False  # Don't update the session on each request
+app.config['SESSION_COOKIE_MAX_AGE'] = 365 * 24 * 60 * 60  # 1 year in seconds (browser-side)
+
+# Initialize Flask-Session
+session_obj = Session()
+session_obj.init_app(app)
 
 # Create instance directory if it doesn't exist
 if not os.path.exists('instance'):
@@ -352,10 +363,11 @@ def home():
         time_period = request.args.get("time_period", "daily")
         start_date = get_time_range(time_period)
         
-        # Get billing data for admin
+        # Get billing data for admin, only include final bills
         billing_data = Billing.query.filter(
             Billing.date >= start_date,
-            Billing.user_id == session['user_id']
+            Billing.user_id == session['user_id'],
+            Billing.status == 'final'
         ).all()
         
         # Calculate metrics
@@ -367,7 +379,8 @@ def home():
         monthly_start = datetime.today().replace(day=1).strftime("%Y-%m-%d")
         monthly_revenue = sum(bill.total_price for bill in Billing.query.filter(
             Billing.date >= monthly_start,
-            Billing.user_id == session['user_id']
+            Billing.user_id == session['user_id'],
+            Billing.status == 'final'
         ).all())
 
         # Create charts
@@ -570,20 +583,39 @@ def login():
                 
                 # Set session data
                 session.clear()
-                session['username'] = username
+                session['username'] = user.username
                 session['user_id'] = user.id
                 session['role'] = user.role
                 session['logged_in'] = True
-                session.permanent = True
+                session.permanent = True  # This makes the session last for PERMANENT_SESSION_LIFETIME
                 
                 # Force session to be saved
                 session.modified = True
                 
+                # Add a last login timestamp
+                session['last_activity'] = datetime.utcnow().isoformat()
+                
+                # Log the login (for debugging)
+                print(f"User {user.username} logged in at {session['last_activity']}")
+                
+                # Ensure the response has the session cookie set with long expiration
+                response = redirect(url_for('home'))
+                response.set_cookie(
+                    'session',
+                    value=request.cookies.get('session', ''),
+                    max_age=365*24*60*60,  # 1 year in seconds
+                    httponly=True,
+                    secure=os.environ.get('FLASK_ENV') == 'production',
+                    samesite='Lax',
+                    expires=datetime.now() + timedelta(days=3650)  # 10 years from now
+                )
+                
                 flash("Login successful!", "success")
-                return redirect(url_for('home'))
+                return response
             else:
                 flash("Invalid username or password", "error")
         except Exception as e:
+            print(f"Login error: {str(e)}")
             flash("An error occurred during login. Please try again.", "error")
             print(f"Login error: {str(e)}")
     
@@ -910,8 +942,10 @@ def delete_account():
 
 # Initialize database and create admin user
 with app.app_context():
+    # Ensure instance directory exists
     try:
         # Ensure instance directory exists
+        os.makedirs(app.instance_path, exist_ok=True)
         instance_path = app.instance_path
         if not os.path.exists(instance_path):
             print(f"Creating instance directory: {instance_path}")
